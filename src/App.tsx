@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.scss';
 import { GoodsList } from './GoodsList';
 import { Good } from './types/Good';
@@ -9,7 +9,7 @@ export const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  function handleLoadAll() {
+  const handleLoadAll = useCallback(() => {
     setError(null);
     setLoading(true);
     getAll()
@@ -22,9 +22,9 @@ export const App: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
+  }, []);
 
-  function handleLoadFirst5() {
+  const handleLoadFirst5 = useCallback(() => {
     setError(null);
     setLoading(true);
     get5First()
@@ -37,9 +37,9 @@ export const App: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
+  }, []);
 
-  function handleLoadRed() {
+  const handleLoadRed = useCallback(() => {
     setError(null);
     setLoading(true);
     getRedGoods()
@@ -52,7 +52,7 @@ export const App: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
+  }, []);
 
   return (
     <div className="App">
