@@ -6,28 +6,73 @@ import { get5First, getAll, getRedGoods } from './api/goods';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   function handleLoadAll() {
-    getAll().then(setGoods);
+    setError(null);
+    setLoading(true);
+    getAll()
+      .then(setGoods)
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error('LoadAll failed:', err);
+        setError('Erro ao carregar os dados. Tente novamente.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function handleLoadFirst5() {
-    get5First().then(setGoods);
+    setError(null);
+    setLoading(true);
+    get5First()
+      .then(setGoods)
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error('LoadFirst5 failed:', err);
+        setError('Erro ao carregar os primeiros 5 itens.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function handleLoadRed() {
-    getRedGoods().then(setGoods);
+    setError(null);
+    setLoading(true);
+    getRedGoods()
+      .then(setGoods)
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error('LoadRed failed:', err);
+        setError('Erro ao carregar os itens vermelhos.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
     <div className="App">
       <h1>Dynamic list of Goods</h1>
-
-      <button type="button" data-cy="all-button" onClick={handleLoadAll}>
+      {error && (
+        <p className="error-message" data-cy="error">
+          {error}
+        </p>
+      )}
+      <button
+        disabled={loading}
+        type="button"
+        data-cy="all-button"
+        onClick={handleLoadAll}
+      >
         Load all goods
       </button>
 
       <button
+        disabled={loading}
         type="button"
         data-cy="first-five-button"
         onClick={handleLoadFirst5}
@@ -35,7 +80,12 @@ export const App: React.FC = () => {
         Load 5 first goods
       </button>
 
-      <button type="button" data-cy="red-button" onClick={handleLoadRed}>
+      <button
+        disabled={loading}
+        type="button"
+        data-cy="red-button"
+        onClick={handleLoadRed}
+      >
         Load red goods
       </button>
 
